@@ -365,7 +365,8 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	&ast.Source{Name: "internal/gql/schemas/schema.graphql", Input: `scalar Time
-# Types
+
+"""Пользователь"""
 type User {
     id: Int!
     vkUserId: Int!
@@ -374,30 +375,43 @@ type User {
     lastName: String
 }
 
+"""Единица"""
 type Unit {
     id: Int!
+    """Заголовок"""
     title: String!
 }
 
+"""Статистика"""
 type Picked {
+    """Общее количество"""
     count: Int!
+    """Друзей выбрало"""
     friendsCount: Int!
+    """Рандоманые пользователи"""
     users: [User!]!
 }
 
+"""Пара единиц"""
 type Pair {
     id: Int!
+    """Первая единица"""
     unitOne: Unit!
+    """Вттораая единица"""
     unitTwo: Unit!
+    """Статистика по первой единице"""
     unitOnePicked: Picked!
+    """Статистика по второй единице"""
     unitTwoPicked: Picked!
 }
 
+"""Баттл"""
 type Battle {
     id: Int!
     title: String!
 }
 
+"""Рануд"""
 type Round {
     id: Int!
     step: Int!
@@ -405,13 +419,18 @@ type Round {
 
 # Define queries here
 type Query {
+    """Авторизованный пользователь"""
     currentUser: User
+    """Получить баттлы"""
     getActiveBattles: [Battle!]!
+    """Получить раунд"""
     getRound(roundId: Int!): [Pair!]!
 }
 
 type Mutation {
+    """Начать баттл"""
     startBattle(battleId: Int!): [Round!]!
+    """Сделать выбор единицы"""
     makePick(pairId: Int!, unitId: Int!): Boolean
 }`, BuiltIn: false},
 }

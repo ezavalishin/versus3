@@ -2,35 +2,49 @@
 
 package models
 
+// Баттл
 type Battle struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`
 }
 
+// Пара единиц
 type Pair struct {
-	ID            int     `json:"id"`
-	UnitOne       *Unit   `json:"unitOne"`
-	UnitTwo       *Unit   `json:"unitTwo"`
+	ID int `json:"id"`
+	// Первая единица
+	UnitOne *Unit `json:"unitOne"`
+	// Вттораая единица
+	UnitTwo *Unit `json:"unitTwo"`
+	// Статистика по первой единице
 	UnitOnePicked *Picked `json:"unitOnePicked"`
+	// Статистика по второй единице
 	UnitTwoPicked *Picked `json:"unitTwoPicked"`
 }
 
+// Статистика
 type Picked struct {
-	Count        int     `json:"count"`
-	FriendsCount int     `json:"friendsCount"`
-	Users        []*User `json:"users"`
+	// Общее количество
+	Count int `json:"count"`
+	// Друзей выбрало
+	FriendsCount int `json:"friendsCount"`
+	// Рандоманые пользователи
+	Users []*User `json:"users"`
 }
 
+// Рануд
 type Round struct {
 	ID   int `json:"id"`
 	Step int `json:"step"`
 }
 
+// Единица
 type Unit struct {
-	ID    int    `json:"id"`
+	ID int `json:"id"`
+	// Заголовок
 	Title string `json:"title"`
 }
 
+// Пользователь
 type User struct {
 	ID        int     `json:"id"`
 	VkUserID  int     `json:"vkUserId"`

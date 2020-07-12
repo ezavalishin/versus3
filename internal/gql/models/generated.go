@@ -2,13 +2,39 @@
 
 package models
 
-type User struct {
-	ID     string `json:"id"`
-	Email  string `json:"email"`
-	UserID string `json:"userId"`
+type Battle struct {
+	ID    int    `json:"id"`
+	Title string `json:"title"`
 }
 
-type UserInput struct {
-	Email  *string `json:"email"`
-	UserID *string `json:"userId"`
+type Pair struct {
+	ID            int     `json:"id"`
+	UnitOne       *Unit   `json:"unitOne"`
+	UnitTwo       *Unit   `json:"unitTwo"`
+	UnitOnePicked *Picked `json:"unitOnePicked"`
+	UnitTwoPicked *Picked `json:"unitTwoPicked"`
+}
+
+type Picked struct {
+	Count        int     `json:"count"`
+	FriendsCount int     `json:"friendsCount"`
+	Users        []*User `json:"users"`
+}
+
+type Round struct {
+	ID   int `json:"id"`
+	Step int `json:"step"`
+}
+
+type Unit struct {
+	ID    int    `json:"id"`
+	Title string `json:"title"`
+}
+
+type User struct {
+	ID        int     `json:"id"`
+	VkUserID  int     `json:"vkUserId"`
+	Avatar    *string `json:"avatar"`
+	FirstName *string `json:"firstName"`
+	LastName  *string `json:"lastName"`
 }

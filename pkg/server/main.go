@@ -1,10 +1,13 @@
 package server
 
 import (
+	"context"
+	"github.com/ezavalishin/versus3/internal/auth"
 	"github.com/ezavalishin/versus3/internal/handlers"
+	log "github.com/ezavalishin/versus3/internal/logger"
+	"github.com/ezavalishin/versus3/internal/orm"
 	"github.com/ezavalishin/versus3/pkg/utils"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 var host, port, gqlPath, gqlPgPath string
@@ -19,7 +22,18 @@ func init() {
 	isPgEnabled = utils.MustGetBool("SERVER_GRAPHQL_PLAYGROUND_IS_ENABLED")
 }
 
-func Run() {
+func AuthMiddleware() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+		ctx := context.WithValue(c.Request.Context(), "GinContextKey", c)
+		c.Request = c.Request.WithContext(ctx)
+		c.Next()
+	}
+}
+
+func Run(orm *orm.ORM) {
+	log.Info("GORM_CONNECTION_DSN: ", utils.MustGet("GORM_CONNECTION_DSN"))
+
 	endpoint := "http://" + host + ":" + port
 
 	r := gin.Default()
@@ -28,12 +42,18 @@ func Run() {
 
 	if isPgEnabled {
 		r.GET(gqlPgPath, handlers.PlaygroundHandler(gqlPath))
-		log.Println("GraphQL Playground @ " + endpoint + gqlPgPath)
+		log.Info("GraphQL Playground @ " + endpoint + gqlPgPath)
 	}
 
-	r.POST(gqlPath, handlers.GraphqlHandler())
-	log.Println("GraphQL @ " + endpoint + gqlPath)
+	authorized := r.Group("/")
 
-	log.Println("Running @ http://" + host + ":" + port)
-	log.Fatalln(r.Run(host + ":" + port))
+	authorized.Use(auth.Middleware(orm))
+	{
+		authorized.POST(gqlPath, handlers.GraphqlHandler(orm))
+	}
+
+	log.Info("GraphQL @ " + endpoint + gqlPath)
+
+	log.Info("Running @ http://" + host + ":" + port)
+	log.Info(r.Run(host + ":" + port))
 }

@@ -1,24 +1,50 @@
+scalar Time
 # Types
 type User {
-    id: ID!
-    email: String!
-    userId: String!
+    id: Int!
+    vkUserId: Int!
+    avatar: String
+    firstName: String
+    lastName: String
 }
 
-# Input Types
-input UserInput {
-    email: String
-    userId: String
+type Unit {
+    id: Int!
+    title: String!
 }
 
-# Define mutations here
-type Mutation {
-    createUser(input: UserInput!): User!
-    updateUser(input: UserInput!): User!
-    deleteUser(userId: ID!): Boolean!
+type Picked {
+    count: Int!
+    friendsCount: Int!
+    users: [User!]!
+}
+
+type Pair {
+    id: Int!
+    unitOne: Unit!
+    unitTwo: Unit!
+    unitOnePicked: Picked!
+    unitTwoPicked: Picked!
+}
+
+type Battle {
+    id: Int!
+    title: String!
+}
+
+type Round {
+    id: Int!
+    step: Int!
 }
 
 # Define queries here
 type Query {
-    users(userId: ID): [User!]!
+    currentUser: User
+    getActiveBattles: [Battle!]!
+    getRound(roundId: Int!): [Pair!]!
+}
+
+type Mutation {
+    startBattle(battleId: Int!): [Round!]!
+    makePick(pairId: Int!, unitId: Int!): Boolean
 }

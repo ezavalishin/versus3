@@ -1,7 +1,19 @@
 package main
 
-import "github.com/ezavalishin/versus3/pkg/server"
+import (
+	orm2 "github.com/ezavalishin/versus3/internal/orm"
+	"github.com/ezavalishin/versus3/pkg/server"
+
+	log "github.com/ezavalishin/versus3/internal/logger"
+)
 
 func main() {
-	server.Run()
+
+	orm, err := orm2.Factory()
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	server.Run(orm)
 }

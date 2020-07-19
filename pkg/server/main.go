@@ -7,7 +7,9 @@ import (
 	log "github.com/ezavalishin/versus3/internal/logger"
 	"github.com/ezavalishin/versus3/internal/orm"
 	"github.com/ezavalishin/versus3/pkg/utils"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 var host, port, gqlPath, gqlPgPath string
@@ -37,6 +39,14 @@ func Run(orm *orm.ORM) {
 	endpoint := "http://" + host + ":" + port
 
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowMethods:     []string{"GET", "POST"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Vk-Params", "Origin", "Host", "Connection", "Accept-Encoding", "Accept-Language", "X-Requested-With"},
+		AllowCredentials: true,
+		AllowOrigins:     []string{"*"},
+		MaxAge:           12 * time.Hour,
+	}))
 
 	r.GET("/ping", handlers.Ping())
 

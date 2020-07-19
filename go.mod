@@ -8,6 +8,7 @@ require (
 	github.com/cosmtrek/air v1.12.1 // indirect
 	github.com/creack/pty v1.1.11 // indirect
 	github.com/fatih/color v1.9.0 // indirect
+	github.com/gin-contrib/cors v1.3.1 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible

@@ -42,6 +42,8 @@ type Unit struct {
 	ID int `json:"id"`
 	// Заголовок
 	Title string `json:"title"`
+	// Картинка
+	ImgURL string `json:"imgUrl"`
 }
 
 // Пользователь

@@ -79,8 +79,9 @@ type ComplexityRoot struct {
 	}
 
 	Unit struct {
-		ID    func(childComplexity int) int
-		Title func(childComplexity int) int
+		ID     func(childComplexity int) int
+		ImgURL func(childComplexity int) int
+		Title  func(childComplexity int) int
 	}
 
 	User struct {
@@ -258,6 +259,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Unit.ID(childComplexity), true
 
+	case "Unit.imgUrl":
+		if e.complexity.Unit.ImgURL == nil {
+			break
+		}
+
+		return e.complexity.Unit.ImgURL(childComplexity), true
+
 	case "Unit.title":
 		if e.complexity.Unit.Title == nil {
 			break
@@ -380,6 +388,8 @@ type Unit {
     id: Int!
     """Заголовок"""
     title: String!
+    """Картинка"""
+    imgUrl: String!
 }
 
 """Статистика"""
@@ -1254,6 +1264,40 @@ func (ec *executionContext) _Unit_title(ctx context.Context, field graphql.Colle
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Unit_imgUrl(ctx context.Context, field graphql.CollectedField, obj *models.Unit) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:   "Unit",
+		Field:    field,
+		Args:     nil,
+		IsMethod: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ImgURL, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2762,6 +2806,11 @@ func (ec *executionContext) _Unit(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "title":
 			out.Values[i] = ec._Unit_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "imgUrl":
+			out.Values[i] = ec._Unit_imgUrl(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

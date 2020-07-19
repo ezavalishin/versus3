@@ -14,6 +14,8 @@ type Unit {
     id: Int!
     """Заголовок"""
     title: String!
+    """Картинка"""
+    imgUrl: String!
 }
 
 """Статистика"""
